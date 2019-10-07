@@ -1,0 +1,19 @@
+{
+  "name": "whitsleblower",
+  "version": "1.0.0",
+  "description": "An app to report public or private news around your area.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Hameed Damee",
+  "license": "MIT",
+  "dependencies": {
+    "cookie-parser": "^1.4.3",
+    "express": "^4.15.4",
+    "express-session": "^1.15.5",
+    "mongoose": "^4.11.12",
+    "passport": "^0.4.0",
+    "passport-google-oauth20": "^1.0.0"
+  }
+}
