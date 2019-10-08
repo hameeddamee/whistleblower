@@ -1,4 +1,6 @@
 const express = require("express");
+const path = require("path");
+const handlebars = require("express-handlebars");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
@@ -11,7 +13,9 @@ require("./models/User");
 require("./config/passport")(passport);
 
 // Load Routes
+const index = require("./routes/index");
 const auth = require("./routes/auth");
+const reports = require("./routes/reports");
 
 // Load Keys
 const keys = require("./config/keys");
@@ -28,9 +32,13 @@ mongoose
 
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("It Works!");
-});
+app.engine(
+  "handlebars",
+  handlebars({
+    defaultLayout: "main"
+  })
+);
+app.set("view engine", "handlebars");
 
 app.use(cookieParser());
 app.use(
@@ -51,11 +59,16 @@ app.use((req, res, next) => {
   next();
 });
 
+// Set static folder
+app.use(express.static(path.join(__dirname, "public")));
+
 // Use Routes
+app.use("/", index);
 app.use("/auth", auth);
+app.use("/stories", stories);
 
 const port = process.env.PORT || 8080;
 
 app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
+  console.log(`Started server on port ${port}`);
 });
