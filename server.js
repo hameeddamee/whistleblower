@@ -5,9 +5,12 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
+const bodyParser = require("body-parser");
+const methodOverride = require("method-override");
 
 // Load User Model
 require("./models/User");
+require("./models/Story");
 
 // Passport Config
 require("./config/passport")(passport);
@@ -19,6 +22,14 @@ const reports = require("./routes/reports");
 
 // Load Keys
 const keys = require("./config/keys");
+
+// Handlebars Helpers
+const {
+  truncate,
+  stripTags,
+  formatDate,
+  select
+} = require("./helpers/handlebars");
 
 // Map global promises
 mongoose.Promise = global.Promise;
@@ -32,10 +43,23 @@ mongoose
 
 const app = express();
 
+// Body Parser Middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// MEthod Override Middelware
+app.use(methodOverride("_method"));
+
 app.engine(
   "handlebars",
   handlebars({
-    defaultLayout: "main"
+    defaultLayout: "main",
+    helpers: {
+      truncate: truncate,
+      stripTags: stripTags,
+      formatDate: formatDate,
+      select: select
+    }
   })
 );
 app.set("view engine", "handlebars");
@@ -65,7 +89,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Use Routes
 app.use("/", index);
 app.use("/auth", auth);
-app.use("/stories", stories);
+app.use("/reports", reports);
 
 const port = process.env.PORT || 8080;
 
