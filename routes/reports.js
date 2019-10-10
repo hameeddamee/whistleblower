@@ -22,9 +22,46 @@ router.get("/show/:id", (req, res) => {
     _id: req.params.id
   })
     .populate("user")
+    .populate("comments.commentUser")
     .then(report => {
-      res.render("reports/show", {
-        report: report
+      if (report.status == "public") {
+        res.render("stories/show", {
+          report: report
+        });
+      } else {
+        if (req.user) {
+          if (req.user.id == report.user._id) {
+            res.render("stories/show", {
+              report: report
+            });
+          } else {
+            res.redirect("/stories");
+          }
+        } else {
+          res.redirect("/stories");
+        }
+      }
+    });
+});
+
+// List reports from a user
+router.get("/user/:userId", (req, res) => {
+  Report.find({ user: req.params.userId, status: "public" })
+    .populate("user")
+    .then(reports => {
+      res.render("reports/index", {
+        reports: stories
+      });
+    });
+});
+
+// Logged in users stories
+router.get("/my", ensureAuthenticated, (req, res) => {
+  Report.find({ user: req.user.id })
+    .populate("user")
+    .then(reports => {
+      res.render("reports/index", {
+        reports: reports
       });
     });
 });
@@ -42,6 +79,13 @@ router.get("/edit/:id", ensureAuthenticated, (req, res) => {
     res.render("reports/edit", {
       report: report
     });
+    if (report.user != req.user.id) {
+      res.redirect("/reports");
+    } else {
+      res.render("reports/edit", {
+        report: report
+      });
+    }
   });
 });
 
@@ -98,6 +142,25 @@ router.put("/:id", (req, res) => {
 router.delete("/:id", (req, res) => {
   Report.remove({ _id: req.params.id }).then(() => {
     res.redirect("/dashboard");
+  });
+});
+
+// Add Comment
+router.post("/comment/:id", (req, res) => {
+  Report.findOne({
+    _id: req.params.id
+  }).then(report => {
+    const newComment = {
+      commentBody: req.body.commentBody,
+      commentUser: req.user.id
+    };
+
+    // Add to comments array
+    report.comments.unshift(newComment);
+
+    report.save().then(report => {
+      res.redirect(`/stories/show/${report.id}`);
+    });
   });
 });
 
