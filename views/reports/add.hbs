@@ -1,11 +1,9 @@
-<h1>Edit Report</h1>
-<h1>Edit report</h1>
+<h1>Add Report</h1>
 <div class="row">
-  <form action="/reports/{{report.id}}?_method=PUT" method="post" class="col s12">
-    <input type="hidden" name="_method" value="PUT">
+  <form action="/reports" method="post" class="col s12">
     <div class="row">
       <div class="input-field">
-        <input type="text" name="title" value="{{report.title}}">
+        <input type="text" name="title">
         <label for="title">Title</label>
       </div>
     </div>
@@ -13,11 +11,9 @@
     <div class="row">
       <div class="input-field">
         <select name="status">
-          {{#select report.status}}
           <option value="public" selected>Public</option>
           <option value="private">Private</option>
           <option value="unpublished">Unpublished</option>
-          {{/select}}
         </select>
         <label for="status">Status</label>
       </div>
@@ -25,16 +21,15 @@
 
     <div class="row">
       <p>
-        <input type="checkbox" name="allowComments" class="filled-in" id="filled-in-box" {{#if report.allowComments}}
-          checked="checked" {{/if}}>
-        <label for="filled-in-box">Allow Comments</label>
+        <input type="checkbox" name="allowComments" class="filled-in" id="filled-in-box" checked="checked">
+        <label for="allowComments">Allow Comments</label>
       </p>
     </div>
 
     <div class="row">
       <div class="input-field">
-        <h5>Tell Us Your Report:</h5>
-        <textarea name="body">{{report.body}}</textarea>
+        <h5>Write Your Report:</h5>
+        <textarea name="body"></textarea>
       </div>
     </div>
 

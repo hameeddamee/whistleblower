@@ -28,5 +28,16 @@ module.exports = {
         new RegExp(">" + selected + "</option>"),
         ' selected="selected"$&'
       );
+  },
+  editIcon: function(storyUser, loggedUser, reportId, floating = true) {
+    if (reportUser == loggedUser) {
+      if (floating) {
+        return `<a href="/reports/edit/${reportId}" class="btn-floating halfway-fab red"><i class="fa fa-pencil"></i></a>`;
+      } else {
+        return `<a href="/reports/edit/${reportId}"><i class="fa fa-pencil"></i></a>`;
+      }
+    } else {
+      return "";
+    }
   }
 };

@@ -2,8 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const Report = mongoose.model("reports");
-// const User = mongoose.model('users');
-const { ensureAuthenticated, ensureGuest } = require("../helpers/auth");
+const { ensureAuthenticated } = require("../helpers/auth");
 
 // reports Index
 router.get("/", (req, res) => {
@@ -25,20 +24,20 @@ router.get("/show/:id", (req, res) => {
     .populate("comments.commentUser")
     .then(report => {
       if (report.status == "public") {
-        res.render("stories/show", {
+        res.render("reports/show", {
           report: report
         });
       } else {
         if (req.user) {
           if (req.user.id == report.user._id) {
-            res.render("stories/show", {
+            res.render("reports/show", {
               report: report
             });
           } else {
-            res.redirect("/stories");
+            res.redirect("/reports");
           }
         } else {
-          res.redirect("/stories");
+          res.redirect("/reports");
         }
       }
     });
@@ -50,12 +49,12 @@ router.get("/user/:userId", (req, res) => {
     .populate("user")
     .then(reports => {
       res.render("reports/index", {
-        reports: stories
+        reports: reports
       });
     });
 });
 
-// Logged in users stories
+// Logged in users reports
 router.get("/my", ensureAuthenticated, (req, res) => {
   Report.find({ user: req.user.id })
     .populate("user")
@@ -76,9 +75,6 @@ router.get("/edit/:id", ensureAuthenticated, (req, res) => {
   Report.findOne({
     _id: req.params.id
   }).then(report => {
-    res.render("reports/edit", {
-      report: report
-    });
     if (report.user != req.user.id) {
       res.redirect("/reports");
     } else {
@@ -159,7 +155,7 @@ router.post("/comment/:id", (req, res) => {
     report.comments.unshift(newComment);
 
     report.save().then(report => {
-      res.redirect(`/stories/show/${report.id}`);
+      res.redirect(`/reports/show/${report.id}`);
     });
   });
 });

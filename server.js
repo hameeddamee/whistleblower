@@ -10,7 +10,7 @@ const methodOverride = require("method-override");
 
 // Load User Model
 require("./models/User");
-require("./models/Story");
+require("./models/Report");
 
 // Passport Config
 require("./config/passport")(passport);
@@ -51,7 +51,7 @@ app.use(bodyParser.json());
 app.use(methodOverride("_method"));
 
 app.engine(
-  "handlebars",
+  "hbs",
   handlebars({
     defaultLayout: "main",
     helpers: {
@@ -62,7 +62,7 @@ app.engine(
     }
   })
 );
-app.set("view engine", "handlebars");
+app.set("view engine", "hbs");
 
 app.use(cookieParser());
 app.use(
