@@ -28,7 +28,9 @@ const {
   truncate,
   stripTags,
   formatDate,
-  select
+  select,
+  editIcon,
+  getYear
 } = require("./helpers/handlebars");
 
 // Map global promises
@@ -55,11 +57,14 @@ app.engine(
   handlebars({
     defaultLayout: "main",
     helpers: {
-      truncate: truncate,
-      stripTags: stripTags,
-      formatDate: formatDate,
-      select: select
-    }
+      truncate,
+      stripTags,
+      formatDate,
+      select,
+      editIcon,
+      year: getYear
+    },
+    extname: "hbs"
   })
 );
 app.set("view engine", "hbs");

@@ -29,7 +29,7 @@ module.exports = {
         ' selected="selected"$&'
       );
   },
-  editIcon: function(storyUser, loggedUser, reportId, floating = true) {
+  editIcon: function(reportUser, loggedUser, reportId, floating = true) {
     if (reportUser == loggedUser) {
       if (floating) {
         return `<a href="/reports/edit/${reportId}" class="btn-floating halfway-fab red"><i class="fa fa-pencil"></i></a>`;
@@ -39,5 +39,9 @@ module.exports = {
     } else {
       return "";
     }
+  },
+  getYear: function() {
+    var d = new Date();
+    return d.getFullYear();
   }
 };

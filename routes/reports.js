@@ -128,7 +128,7 @@ router.put("/:id", (req, res) => {
     report.status = req.body.status;
     report.allowComments = allowComments;
 
-    Report.save().then(report => {
+    report.save().then(report => {
       res.redirect("/dashboard");
     });
   });
